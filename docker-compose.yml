@@ -4,8 +4,8 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        - USER_UID=${USER_UID}
-        - USER_GID=${USER_GID}
+      - USER_UID=${USER_UID}
+      - USER_GID=${USER_GID}
     container_name: franka_ros2
     network_mode: "host"
     privileged: true
@@ -13,16 +13,20 @@ services:
     tty: true
     stdin_open: true
     volumes:
-      - ./:/ros2_ws/src
-      - /tmp/.X11-unix:/tmp/.X11-unix
-      - ./limits.conf:/etc/security/limits.conf
-      - /dev:/dev
+    - ./:/ros2_ws/src
+    - install_volume:/ros2_ws/install
+    - /tmp/.X11-unix:/tmp/.X11-unix
+    - ./limits.conf:/etc/security/limits.conf
+    - /dev:/dev
     environment:
       QT_X11_NO_MITSHM: 1
       DISPLAY: $DISPLAY
     cap_add:
-      - SYS_NICE
+    - SYS_NICE
     ulimits:
       rtprio: 99
       rttime: -1
       memlock: 8428281856
+
+volumes:
+  install_volume:
